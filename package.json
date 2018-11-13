@@ -30,5 +30,9 @@
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.3.0",
     "webpack-hot-middleware": "^2.7.1"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack-dev-server --config webpack.config.js --hot --inline"
   }
 }
