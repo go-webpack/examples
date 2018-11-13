@@ -1,4 +1,8 @@
+import '@babel/polyfill'
 import "application.sass";
 
-console.log("Congratulations, go-webpack is working!")
-alert("Congratulations, go-webpack is working!")
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Congratulations, go-webpack is working!")
+  document.getElementById("output").innerHTML = "Congratulations, go-webpack is working!"
+});
+
