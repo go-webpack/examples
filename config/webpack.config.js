@@ -52,7 +52,14 @@ var config = {
           {
             test: /\.(sass|scss|css)$/,
             use: [
-              ExtractCssChunks.loader,
+              {
+                loader: ExtractCssChunks.loader,
+                options: {
+                  hot: production ? false : true,
+                  // Force reload all
+                  //reloadAll: true,
+                }
+              },
               {
                 loader: "css-loader",
                 options: {
@@ -95,8 +102,6 @@ var config = {
           // both options are optional
           filename: production ? "[name]-[chunkhash].css" : "[name].css",
           chunkfilename: production ? "[name]-[id].css" : "[name].css",
-          hot: production ? false : true,
-          reloadAll: true,
         }
     ),
     new CleanUpExtractCssChunks(),
