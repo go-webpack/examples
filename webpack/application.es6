@@ -1,4 +1,4 @@
-import '@babel/polyfill'
+import "normalize.css";
 import "application.sass";
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -2,21 +2,21 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-webpack/webpack"
-	_ "github.com/mattn/go-sqlite3"
-	"github.com/qor/qor/utils"
 	"github.com/qor/render"
-	"github.com/qor/wildcard_router"
 )
 
 var renderer *render.Render
 
 func init() {
+	// this is because public folder is shared between examples
+	webpack.FsPath = "../public/webpack"
+
 	renderer = render.New(&render.Config{
 		//ViewPaths:     []string{"app/views"},
 		//DefaultLayout: "application", // default value is application
@@ -45,23 +45,17 @@ func viewHelpers() map[string]interface{} {
 func main() {
 	isDev := flag.Bool("dev", false, "development mode")
 	flag.Parse()
-	webpack.Plugin = "manifest"
-	webpack.Init(*isDev)
 
-	mux := http.NewServeMux()
+	webpack.Init(*isDev)
 
 	router := gin.Default()
 	gin.SetMode(gin.DebugMode)
 	router.GET("/", homeIndex)
 
-	for _, path := range []string{"webpack"} {
-		mux.Handle(fmt.Sprintf("/%s/", path), utils.FileServer(http.Dir("public")))
+	if !*isDev {
+		router.Static("/webpack", "../public/webpack")
 	}
 
-	WildcardRouter := wildcard_router.New()
-	WildcardRouter.MountTo("/", mux)
-	WildcardRouter.AddHandler(router)
-
-	fmt.Println("Listening on: 9000")
-	http.ListenAndServe(":9000", mux)
+	log.Println("Listening on: 9000")
+	log.Fatal(http.ListenAndServe(":9000", router))
 }

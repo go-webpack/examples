@@ -1,15 +1,20 @@
-<!DOCTYPE HTML>
-<html lang="en" >
+<!doctype html>
+<html>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>go-webpack iris demo</title>
-    {{ asset "vendor.css" }}
+    <title>go-webpack Gin demo</title>
     {{ asset "application.css" }}
   </head>
   <body>
-    {{ yield }}
+    <div class="page-wrap">
+      <h1>go-webpack Gin demo</h1>
+      Check browser debug console for errors.
+      <div id="output"></div>
+    </div>
     {{ asset "vendor.js" }}
     {{ asset "application.js" }}
   </body>
 </html>
+
+

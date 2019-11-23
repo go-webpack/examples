@@ -5,29 +5,36 @@ import (
 	"log"
 
 	"github.com/go-webpack/webpack"
-	iris "gopkg.in/kataras/iris.v6"
-	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
-	"gopkg.in/kataras/iris.v6/adaptors/view"
+	"github.com/kataras/iris/v12"
 )
 
-func homeIndex(ctx *iris.Context) {
-	ctx.MustRender("home.html", struct{}{})
+func init() {
+	// this is because public folder is shared between examples
+	webpack.FsPath = "../public/webpack"
+}
+
+func homeIndex(ctx iris.Context) {
+	ctx.View("home.html")
 }
 
 func main() {
 	isDev := flag.Bool("dev", false, "development mode")
 	flag.Parse()
-	webpack.Plugin = "manifest"
 	webpack.Init(*isDev)
-	view := view.HTML("./templates", ".html")
-	view = view.Layout("layout.html")
-	view = view.Funcs(map[string]interface{}{"asset": webpack.AssetHelper})
 
 	app := iris.New()
-	app.Adapt(view.Reload(*isDev))
-	app.Adapt(httprouter.New())
+	app.Logger().SetLevel("debug")
+
+	tmpl := iris.HTML("./templates", ".html")
+	tmpl.Reload(*isDev)
+	// Important part:
+	tmpl.AddFunc("asset", webpack.AssetHelper)
+	tmpl.Layout("layout.html")
+
+	app.RegisterView(tmpl)
+
 	app.Get("/", homeIndex)
 
-	log.Println("Iris demo app listening on http://localhost:3200")
-	app.Listen(":3200")
+	log.Println("Iris demo app listening on http://localhost:9000")
+	app.Run(iris.Addr(":9000"), iris.WithCharset("UTF-8"))
 }

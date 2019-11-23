@@ -56,7 +56,7 @@ var config = {
               {
                 loader: "css-loader",
                 options: {
-                  minimize: true,
+                  //minimize: true,
                   sourceMap: true
                 }
               },
@@ -96,6 +96,7 @@ var config = {
           filename: production ? "[name]-[chunkhash].css" : "[name].css",
           chunkfilename: production ? "[name]-[id].css" : "[name].css",
           hot: production ? false : true,
+          reloadAll: true,
         }
     ),
     new CleanUpExtractCssChunks(),
